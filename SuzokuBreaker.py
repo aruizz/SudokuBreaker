@@ -1,13 +1,16 @@
 from random import sample
 
-base = 3
-side = 9
-size = 81
+base = 2
+side = 2
+size = 2
 board = []
 
 
 def setBase(newBase):
     global base, side,size
+    if newBase > 4 or newBase < 2:
+        print("Base must be 2, 3 or 4.")
+        return
     base = newBase
     side = base * base
     size = side * side
@@ -27,7 +30,6 @@ def genBoardSol():
     nums = sample(range(1, side+1), side)
     board = [[nums[pattern(r, c)] for c in cols] for r in rows]
 
-
 def genBoard():
     global board
     nRemove = size * 3//4
@@ -46,16 +48,37 @@ def solveBox(row,col,value):
                 return False
     return True 
 
+def solveBoardRec(row,col):
+    global board
+    if col == side:
+        row += 1
+        col = 0
+    if row == side:
+        return True
+    if board[row][col] > 0:
+        return solveBoardRec(row, col + 1)
+    for value in range(1, side+1): 
+        if solveBox(row, col, value):
+            board[row][col] = value
+            if solveBoardRec(row, col + 1):
+                return True
+    board[row][col] = 0
+    return False
 
-    
-
-
-
+setBase(3)
 genBoardSol()
+print("===============================")
 for row in board:
     print(row)
 print("===============================")
 genBoard()
 for row in board:
     print(row)
-print(solveBox(0,0,1))
+print("===============================")
+if base == 4:
+    print("DANGER: Base 4 may take too long to solve.")
+    print("===============================")
+solveBoardRec(0,0)
+for row in board:
+    print(row)
+print("===============================")
