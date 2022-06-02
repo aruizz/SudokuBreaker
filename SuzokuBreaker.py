@@ -1,8 +1,8 @@
 from random import sample
 
-base = -1
-side = -1
-size = -1
+base = 3
+side = 9
+size = 81
 board = []
 
 
@@ -34,8 +34,23 @@ def genBoard():
     for p in sample(range(size),nRemove):
         board[p//side][p%side] = 0
 
+def solveBox(row,col,value):
+    for i in range(side):
+        if (board[row][i] == value) or (board[i][col] == value):
+            return False
+    startBaseRow = row - row % base
+    startBaseCol = col -col % base
+    for i in range(base):
+        for j in range(base):
+            if board[startBaseRow+i][startBaseCol+j] == value:
+                return False
+    return True 
 
-setBase(3)
+
+    
+
+
+
 genBoardSol()
 for row in board:
     print(row)
@@ -43,3 +58,4 @@ print("===============================")
 genBoard()
 for row in board:
     print(row)
+print(solveBox(0,0,1))
